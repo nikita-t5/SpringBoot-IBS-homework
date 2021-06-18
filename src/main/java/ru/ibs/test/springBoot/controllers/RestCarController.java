@@ -12,6 +12,7 @@ import ru.ibs.test.springBoot.services.interfaces.CarService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @RestController
@@ -46,11 +47,17 @@ public class RestCarController {
         return response;
     }
 
-    @PostMapping("update/{id}")
-    public Map<String, Object> updateById(@PathVariable Long id, @RequestBody String inputCar) throws JsonProcessingException {
-        Car car = objectMapper.readValue(inputCar, Car.class);
-        carService.updateById(id, car.getManufacturerName(), car.getModelName());
-        JSONObject response = objectMapper.convertValue(car, JSONObject.class);
+    @PostMapping(value = {"update/","update/{id}"})
+    public Map<String, Object> updateById(@PathVariable(required = false) Long id, @RequestBody Car car) throws JsonProcessingException {
+        if (Objects.isNull(id)) {
+            throw new RuntimeException("Empty id!");
+        }
+
+//        Car car = objectMapper.readValue(inputCar, Car.class);
+
+        //наверное так лучше
+        final Car updatedCar = carService.updateById(id, car.getManufacturerName(), car.getModelName());
+        JSONObject response = objectMapper.convertValue(updatedCar, JSONObject.class);
         return response;
     }
 
