@@ -1,15 +1,14 @@
 package ru.ibs.test.springBoot.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.ibs.test.springBoot.entities.Engine;
+import ru.ibs.test.springBoot.entities.*;
 import ru.ibs.test.springBoot.services.interfaces.EngineService;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/engine", consumes = {MediaType.ALL_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,11 +24,11 @@ public class RestEngineController {
         this.objectMapper = objectMapper;
     }
 
+
     @GetMapping("read")
     public List<Engine> readAll(){
         return engineService.findAllEngines();
     }
-
 
     @GetMapping("read/{id}")
     public Engine readById(@PathVariable Long id) {
@@ -37,17 +36,20 @@ public class RestEngineController {
     }
 
     @PostMapping("create")
-    public Engine create(@RequestBody String inputEngine) throws IOException {
-        Engine engine = objectMapper.readValue(inputEngine, Engine.class);
+    public Engine create(@RequestBody Engine engine) {
         engineService.addEngine(engine);
         return engine;
     }
 
-    @PostMapping("update/{id}")  //получаем id в параметрах, а поля в body
-    public Engine updateById(@PathVariable Long id, @RequestBody String inputEngine) throws JsonProcessingException {
-        Engine engine = objectMapper.readValue(inputEngine, Engine.class);
-        engineService.updateById(id,engine.getType(),engine.getGears(),engine.getManuals());
-        return engineService.findEngineById(id);
+    @PostMapping(value = {"update/", "update/{id}"})
+    public Engine updateById(@PathVariable(required = false) Long id, @RequestBody Engine engine) {
+        if (Objects.isNull(id))
+            throw new RuntimeException("Empty id!");
+        String type = engine.getType();
+        List<Gear> gears = engine.getGears();
+        List<Manual> manuals = engine.getManuals();
+        final Engine updateEngine = engineService.updateById(id,type,gears,manuals);
+        return updateEngine;
     }
 
     @PostMapping("delete/{id}")

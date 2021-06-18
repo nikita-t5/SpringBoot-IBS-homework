@@ -25,5 +25,4 @@ public class Engine {
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Manual> manuals;
-
 }

@@ -22,8 +22,8 @@ public class CarServiceImpl implements CarService {
 
 
     @Override
-    public Car addCar(Car car) {
-        return carRepository.save(car);
+    public void addCar(Car car) {
+        carRepository.save(car);
     }
 
     @Override
@@ -46,15 +46,6 @@ public class CarServiceImpl implements CarService {
         carRepository.save(car);
         return car;
     }
-
-//    @Override
-//    public Car updateById(Long carId, String manufacturerName, String modelName) {
-//        Car car = carRepository.findById(carId).get();
-//        car.setManufacturerName(manufacturerName);
-//        car.setModelName(modelName);
-//        carRepository.save(car);
-//        return car;
-//    }
 
     @Override
     public void delete(Long carId) {

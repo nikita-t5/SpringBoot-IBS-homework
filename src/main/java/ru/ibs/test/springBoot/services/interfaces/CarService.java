@@ -7,7 +7,8 @@ import ru.ibs.test.springBoot.entities.SteeringWheel;
 import java.util.List;
 
 public interface CarService {
-    Car addCar(Car car);
+
+    void addCar(Car car);
 
     List<Car> findAllCars();
 

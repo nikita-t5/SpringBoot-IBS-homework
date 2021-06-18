@@ -1,6 +1,5 @@
 package ru.ibs.test.springBoot.services.interfaces;
 
-import ru.ibs.test.springBoot.entities.Car;
 import ru.ibs.test.springBoot.entities.Engine;
 import ru.ibs.test.springBoot.entities.Gear;
 import ru.ibs.test.springBoot.entities.Manual;
@@ -15,9 +14,8 @@ public interface EngineService {
 
     void addEngine(Engine engine);
 
-    void updateById(Long engineId, String type, List<Gear> gears, List<Manual> manuals);
+    Engine updateById(Long engineId, String type, List<Gear> gears, List<Manual> manuals);
 
     void delete(Long engineId);
-
 }
 
