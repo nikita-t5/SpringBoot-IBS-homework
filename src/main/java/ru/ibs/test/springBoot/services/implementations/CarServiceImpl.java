@@ -3,6 +3,8 @@ package ru.ibs.test.springBoot.services.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ibs.test.springBoot.entities.Car;
+import ru.ibs.test.springBoot.entities.Engine;
+import ru.ibs.test.springBoot.entities.SteeringWheel;
 import ru.ibs.test.springBoot.repositories.CarRepository;
 import ru.ibs.test.springBoot.services.interfaces.CarService;
 
@@ -17,6 +19,7 @@ public class CarServiceImpl implements CarService {
     public CarServiceImpl(CarRepository carRepository) {
         this.carRepository = carRepository;
     }
+
 
     @Override
     public Car addCar(Car car) {
@@ -34,13 +37,24 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car updateById(Long carId, String manufacturerName, String modelName) {
+    public Car updateById(Long carId, String manufacturerName, String modelName, Engine engine, SteeringWheel steeringWheel) {
         Car car = carRepository.findById(carId).get();
         car.setManufacturerName(manufacturerName);
         car.setModelName(modelName);
+        car.setEngine(engine);
+        car.setSteeringWheel(steeringWheel);
         carRepository.save(car);
         return car;
     }
+
+//    @Override
+//    public Car updateById(Long carId, String manufacturerName, String modelName) {
+//        Car car = carRepository.findById(carId).get();
+//        car.setManufacturerName(manufacturerName);
+//        car.setModelName(modelName);
+//        carRepository.save(car);
+//        return car;
+//    }
 
     @Override
     public void delete(Long carId) {

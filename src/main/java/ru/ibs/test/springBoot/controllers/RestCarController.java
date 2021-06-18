@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.ibs.test.springBoot.entities.Car;
+import ru.ibs.test.springBoot.entities.Engine;
+import ru.ibs.test.springBoot.entities.SteeringWheel;
 import ru.ibs.test.springBoot.services.interfaces.CarService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 @RestController
@@ -44,13 +47,38 @@ public class RestCarController {
         carService.addCar(car);
         JSONObject response = objectMapper.convertValue(car, JSONObject.class);
         return response;
+/*
+если body запроса:
+{
+    "manufacturerName": "DDD",
+    "modelName":"333",
+    "engine": null,
+}
+,то создастся объект:
+{
+    "modelName": "333",
+    "engine": null,
+    "steeringWheel": null,
+    "manufacturerName": "DDD",
+    "id": 40
+}
+если в запросе "engine" не null, то ошибка.
+
+Вопрос: как положить какой-то engine в car?
+*/
     }
 
-    @PostMapping("update/{id}")
-    public Map<String, Object> updateById(@PathVariable Long id, @RequestBody String inputCar) throws JsonProcessingException {
-        Car car = objectMapper.readValue(inputCar, Car.class);
-        carService.updateById(id, car.getManufacturerName(), car.getModelName());
-        JSONObject response = objectMapper.convertValue(car, JSONObject.class);
+    @PostMapping(value = {"update/", "update/{id}"})
+    public Map<String, Object> updateById(@PathVariable(required = false) Long id, @RequestBody Car car) throws JsonProcessingException {
+        if (Objects.isNull(id)) {
+            throw new RuntimeException("Empty id!");
+        }
+        String manufacturerName = car.getManufacturerName();
+        String modelName = car.getModelName();
+        Engine engine = car.getEngine();
+        SteeringWheel steeringWheel = car.getSteeringWheel();
+        final Car updatedCar = carService.updateById(id,manufacturerName,modelName,engine,steeringWheel);
+        JSONObject response = objectMapper.convertValue(updatedCar, JSONObject.class);
         return response;
     }
 

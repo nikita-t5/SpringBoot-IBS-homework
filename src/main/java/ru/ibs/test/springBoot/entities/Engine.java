@@ -6,24 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Car {
+public class Engine {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String manufacturerName;
+    private String type;
 
-    private String modelName;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "engine")
+    private List<Gear> gears;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Engine engine;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Manual> manuals;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private SteeringWheel steeringWheel;
 }
